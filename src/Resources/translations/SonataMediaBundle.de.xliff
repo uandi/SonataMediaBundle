@@ -423,6 +423,10 @@
                 <source>sonata_media_gallery_index</source>
                 <target>Galerie</target>
             </trans-unit>
+            <trans-unit id="sonata_template_box_media_gallery_block">
+                <source>sonata_template_box_media_gallery_block</source>
+                <target>as ist ein Galerie Media Block den Sie überschreiben können.</target>
+            </trans-unit>
             <trans-unit id="list.label_description">
                 <source>list.label_description</source>
                 <target>Beschreibung</target>
@@ -575,6 +579,18 @@
                 <source>Options</source>
                 <target>Einstellungen</target>
             </trans-unit>
+            <trans-unit id="multi_upload.title">
+                <source>multi_upload.title</source>
+                <target>MultiUpload</target>
+            </trans-unit>
+            <trans-unit id="multi_upload.add_files">
+                <source>multi_upload.add_files</source>
+                <target>Dateien auswählen</target>
+            </trans-unit>
+            <trans-unit id="multi_upload.start_upload">
+                <source>multi_upload.start_upload</source>
+                <target>Upload starten</target>
+            </trans-unit>
             <trans-unit id="form.label_translation_domain">
                 <source>form.label_translation_domain</source>
                 <target>Übersetzungsdatei</target>
@@ -583,6 +599,13 @@
                 <source>form.label_icon</source>
                 <target>Icon</target>
             </trans-unit>
+            <trans-unit id="multi_upload.cancel_upload">
+                <source>multi_upload.cancel_upload</source>
+                <target>Upload abbrechen</target>
+            </trans-unit>
+            <trans-unit id="breadcrumb.link_media_multi_upload">
+                <source>breadcrumb.link_media_multi_upload</source>
+                <target>MultiUpload</target>
         </body>
     </file>
 </xliff>

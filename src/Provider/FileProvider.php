@@ -34,7 +34,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 
-class FileProvider extends BaseProvider
+class FileProvider extends BaseProvider implements MultiUploadInterface
 {
     protected $allowedExtensions;
 
@@ -311,6 +311,19 @@ class FileProvider extends BaseProvider
                     ->addViolation('Invalid mime type : %type%', ['%type%' => $media->getBinaryContent()->getMimeType()])
                 ->end();
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureMultiUpload(FormMapper $formMapper)
+    {
+        // NEXT_MAJOR: Remove BC trick when bumping Symfony requirement to 2.8+
+        $fileType = method_exists('Symfony\Component\Form\AbstractType', 'getBlockPrefix')
+            ? 'Symfony\Component\Form\Extension\Core\Type\FileType'
+            : 'file';
+
+        $formMapper->add('binaryContent', $fileType, array('attr' => array('multiple' => true)));
     }
 
     /**

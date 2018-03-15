@@ -11,10 +11,13 @@
 
 namespace Sonata\MediaBundle\Admin;
 
+use Knp\Menu\ItemInterface as MenuItemInterface;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
+use Sonata\AdminBundle\Admin\AdminInterface;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Form\Type\ModelListType;
+use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\CoreBundle\Model\Metadata;
 use Sonata\MediaBundle\Form\DataTransformer\ProviderDataTransformer;
 use Sonata\MediaBundle\Model\CategoryManagerInterface;
@@ -48,6 +51,15 @@ abstract class BaseMediaAdmin extends AbstractAdmin
         $this->pool = $pool;
 
         $this->categoryManager = $categoryManager;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureRoutes(RouteCollection $collection)
+    {
+        $collection->add('multi_upload', 'upload/multi');
+        $collection->add('multi_upload_submit', 'upload/multi/submit/{context}/{provider}');
     }
 
     /**
@@ -151,6 +163,14 @@ abstract class BaseMediaAdmin extends AbstractAdmin
         );
 
         return new Metadata($object->getName(), $object->getDescription(), $url);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configureTabMenu(MenuItemInterface $menu, $action, AdminInterface $childAdmin = null)
+    {
+        $menu->addChild('multi_upload.title', array('route' => 'admin_sonata_media_media_multi_upload'));
     }
 
     /**

@@ -1,0 +1,136 @@
+{% extends 'SonataAdminBundle:CRUD:base_edit.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/sonatamedia/vendor/blueimp-fileupload/css/jquery.fileupload.css') }}">
+    <link rel="stylesheet" href="{{ asset('bundles/sonatamedia/vendor/blueimp-fileupload/css/jquery.fileupload-ui.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/sonatamedia/vendor/blueimp-load-image/load-image.all.min.js') }}"></script>
+    <script src="{{ asset('bundles/sonatamedia/vendor/blueimp-template/tmpl.min.js') }}"></script>
+    <script src="{{ asset('bundles/sonatamedia/vendor/blueimp-iframe-transport/jquery.iframe-transport.js') }}"></script>
+    <script src="{{ asset('bundles/sonatamedia/vendor/blueimp-fileupload/js/jquery.fileupload.js') }}"></script>
+    <script src="{{ asset('bundles/sonatamedia/vendor/blueimp-fileupload/js/jquery.fileupload-process.js') }}"></script>
+    <script src="{{ asset('bundles/sonatamedia/vendor/blueimp-fileupload/js/jquery.fileupload-image.js') }}"></script>
+    <script src="{{ asset('bundles/sonatamedia/vendor/blueimp-fileupload/js/jquery.fileupload-ui.js') }}"></script>
+{% endblock %}
+
+{% block title %}
+    {{ "multi_upload.title"|trans({}, 'SonataMediaBundle') }}
+{% endblock %}
+
+{% block sonata_admin_content %}
+    <div class="container">
+    {{ form_start(form, {attr: {id: form.vars.id }}) }}
+        <div class="row fileupload-buttonbar">
+            <div class="col-lg-7">
+                <span class="btn btn-success fileinput-button">
+                    <i class="fa fa-plus"></i>
+                    <span>{{ "multi_upload.add_files"|trans({}, 'SonataMediaBundle') }}</span>
+                    {{ form_widget(form.binaryContent) }}
+                </span>
+                <button type="reset" class="btn btn-warning cancel">
+                    <i class="fa fa-ban"></i>
+                    <span>{{ "multi_upload.cancel_upload"|trans({}, 'SonataMediaBundle') }}</span>
+                </button>
+                <span class="fileupload-process"></span>
+            </div>
+            <div class="col-lg-5 fileupload-progress fade">
+                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+                </div>
+                <div class="progress-extended">&nbsp;</div>
+            </div>
+        </div>
+        <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
+    {{ form_end(form) }}
+    </div>
+{% verbatim %}
+<script id="template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-download fade">
+        <td>
+            <span class="preview" >
+                {% if (file.thumbnailUrl) { %}
+                    <img height="70" src="{%=file.thumbnailUrl%}">
+                {% } %}
+            </span>
+        </td>
+        <td>
+            <p class="name">
+                    <span>{%=file.name%}</span>
+            </p>
+            {% if (file.error) { %}
+                <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+            {% } %}
+        </td>
+        <td>
+            <span class="size">{%=o.formatFileSize(file.size)%}</span>
+        </td>
+        <td>
+            {% if (file.editUrl) { %}
+                <a class="btn btn-primary" target="_blank" href="{%=file.editUrl%}">
+                    <span>{% endverbatim %}{{ "action_edit"|trans({}, 'SonataAdminBundle') }}{% verbatim %}</span>
+                </a>
+            {% }  %}
+        </td>
+    </tr>
+{% } %}
+</script>
+    <script id="template-upload" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-upload fade">
+        <td>
+            <span class="preview"></span>
+        </td>
+        <td>
+            <p class="name">{%=file.name%}</p>
+            <strong class="error text-danger"></strong>
+        </td>
+        <td>
+            <p class="size">Processing...</p>
+            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+        </td>
+        <td>
+            {% if (!i && !o.options.autoUpload) { %}
+                <button class="btn btn-primary start" disabled>
+                    <i class="fa fa-upload"></i>
+                    <span>{% endverbatim %}{{ "multi_upload.start_upload"|trans({}, 'SonataMediaBundle') }}{% verbatim %}</span>
+                </button>
+            {% } %}
+            {% if (!i) { %}
+                <button class="btn btn-warning cancel">
+                    <i class="fa fa-ban"></i>
+                    <span>{% endverbatim %}{{ "multi_upload.cancel_upload"|trans({}, 'SonataMediaBundle') }}{% verbatim %}</span>
+                </button>
+            {% } %}
+        </td>
+    </tr>
+{% } %}
+</script>
+
+{% endverbatim %}
+    <script>
+        $(function () {
+            'use strict';
+
+            $('#{{ form.vars.id }}').fileupload({
+                url: '{{ form.vars.action }}',
+                autoUpload: true,
+                uploadTemplateId: 'template-upload',
+                disableImageResize: true,
+                previewCanvas: false
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block form %}
+{% endblock %}
+
+{% block actions %}
+    <li>{% include 'SonataAdminBundle:Button:list_button.html.twig' %}</li>
+    <li>{% include 'SonataAdminBundle:Button:create_button.html.twig' %}</li>
+{% endblock %}
